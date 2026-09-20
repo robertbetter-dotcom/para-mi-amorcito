@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Para Ana Sofía 💛</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      overflow: hidden;
+      background: radial-gradient(circle at center, #1b1a03 0%, #050508 70%, #000000 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      height: 100vh;
+      width: 100vw;
+      color: #fff;
+    }
+
+    #canvas-container {
+      width: 100vw;
+      height: 100vh;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+
+    /* Contenedor de elementos superpuestos */
+    .galaxy-ui {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    /* Corazón central con el nombre */
+    .center-heart {
+      position: absolute;
+      top: 22%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+    .heart-svg {
+      width: 190px;
+      height: 170px;
+      filter: drop-shadow(0 0 12px #ffea00) drop-shadow(0 0 25px #ffd700);
+      animation: pulseHeart 2s infinite ease-in-out;
+    }
+    .heart-title {
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Georgia', cursive, serif;
+      font-size: 2.3rem;
+      font-weight: bold;
+      color: #ffffff;
+      text-shadow: 0 0 10px #ffe600, 0 0 20px #ffaa00;
+      white-space: nowrap;
+    }
+
+    /* Frases flotantes con brillo */
+    .phrase {
+      position: absolute;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #fffbdf;
+      text-shadow: 0 0 8px #ffe600, 0 0 15px #ffaa00;
+      animation: floatSlow 3s infinite ease-in-out alternate;
+    }
+
+    /* Posiciones de las frases */
+    .p1 { top: 38%; left: 10%; }  /* Eres mi sol */
+    .p2 { top: 38%; right: 12%; } /* Mi Amor 💛 */
+    .p3 { top: 44%; left: 45%; font-size: 1.4rem; } /* Te Amo */
+    .p4 { top: 55%; right: 15%; } /* Me encantas 🌸 */
+    .p5 { top: 55%; left: 15%; } /* Siempre juntos 💛 */
+
+    /* Ramos de flores flotantes */
+    .flower-item {
+      position: absolute;
+      font-size: 3rem;
+      filter: drop-shadow(0 0 10px rgba(255, 230, 0, 0.8));
+      animation: floatSlow 4s infinite ease-in-out alternate;
+    }
+    .f1 { top: 23%; left: 12%; font-size: 4rem; } /* Ramo principal izquierdo */
+    .f2 { top: 20%; right: 10%; font-size: 4rem; } /* Ramo principal derecho */
+    .f3 { top: 50%; left: 48%; font-size: 2.5rem; } /* Ramo centro */
+    .f4 { top: 45%; left: 18%; font-size: 2.2rem; }
+    .f5 { top: 45%; right: 18%; font-size: 2.2rem; }
+
+    /* Carta / Mensaje de amor abajo */
+    .love-card {
+      position: absolute;
+      bottom: 35px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 580px;
+      background: rgba(18, 12, 2, 0.65);
+      border: 1px solid rgba(255, 230, 0, 0.4);
+      border-radius: 16px;
+      padding: 16px 24px;
+      text-align: center;
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.25), inset 0 0 15px rgba(255, 230, 0, 0.1);
+      backdrop-filter: blur(8px);
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    .love-card p {
+      font-family: 'Georgia', serif;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: #fff9e6;
+      text-shadow: 0 0 8px rgba(255, 230, 0, 0.6);
+    }
+
+    .love-card .signature {
+      display: block;
+      margin-top: 8px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #ffe600;
+    }
+
+    @keyframes pulseHeart {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 12px #ffea00); }
+      50% { transform: scale(1.06); filter: drop-shadow(0 0 25px #ffe600); }
+    }
+
+    @keyframes floatSlow {
+      0% { transform: translateY(0px); }
+      100% { transform: translateY(-8px); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, 20px); }
+      to { opacity: 1; transform: translate(-50%, 0); }
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+  <!-- Espacio 3D para la galaxia -->
+  <div id="canvas-container"></div>
+
+  <!-- Interfaz con frases, ramos e íconos -->
+  <div class="galaxy-ui">
+    
+    <!-- Corazón centrado arriba con su nombre -->
+    <div class="center-heart">
+      <svg class="heart-svg" viewBox="0 0 100 100">
+        <path fill="none" stroke="#ffe600" stroke-width="3" stroke-dasharray="4,2" 
+              d="M10,30 A20,20 0 0,1 50,30 A20,20 0 0,1 90,30 Q90,60 50,90 Q10,60 10,30 Z" />
+      </svg>
+      <div class="heart-title">Ana Sofía</div>
+    </div>
+
+    <!-- Ramos de flores flotantes -->
+    <div class="flower-item f1">🌻💐</div>
+    <div class="flower-item f2">💐🌻</div>
+    <div class="flower-item f3">💐</div>
+    <div class="flower-item f4">🌻</div>
+    <div class="flower-item f5">🌻</div>
+
+    <!-- Frases de amor en la pantalla -->
+    <div class="phrase p1">Eres mi sol</div>
+    <div class="phrase p2">Mi Amor 💛</div>
+    <div class="phrase p3">Te Amo 🌻</div>
+    <div class="phrase p4">Me encantas ✨</div>
+    <div class="phrase p5">Siempre juntos 💛</div>
+
+    <!-- Cuadro con el mensaje especial abajo -->
+    <div class="love-card">
+      <p>
+        "En todo el universo no existe una estrella que brille tanto como tú. Gracias por iluminar mis días con tu sonrisa. Estas flores amarillas son solo un pedacito del inmenso amor que siento por ti."
+        <span class="signature">¡Feliz día, mi reina! 🌻✨💛</span>
+      </p>
+    </div>
+
+  </div>
+
+  <script>
+    // Configuración de la galaxia 3D en segundo plano
+    const container = document.getElementById('canvas-container');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    container.appendChild(renderer.domElement);
+
+    const parameters = {
+      count: 15000,
+      size: 0.018,
+      radius: 6,
+      branches: 4,
+      spin: 1.2,
+      randomness: 0.6,
+      power: 3,
+      insideColor: '#ffee55',
+      outsideColor: '#ff9900'
+    };
+
+    const geometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(parameters.count * 3);
+    const colors = new Float32Array(parameters.count * 3);
+
+    const colorInside = new THREE.Color(parameters.insideColor);
+    const colorOutside = new THREE.Color(parameters.outsideColor);
+
+    for (let i = 0; i < parameters.count; i++) {
+      const i3 = i * 3;
+      const radius = Math.random() * parameters.radius;
+      const spinAngle = radius * parameters.spin;
+      const branchAngle = ((i % parameters.branches) / parameters.branches) * Math.PI * 2;
+
+      const randomX = Math.pow(Math.random(), parameters.power) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
+      const randomY = Math.pow(Math.random(), parameters.power) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
+      const randomZ = Math.pow(Math.random(), parameters.power) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
+
+      positions[i3] = Math.cos(branchAngle + spinAngle) * radius + randomX;
+      positions[i3 + 1] = randomY;
+      positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ;
+
+      const mixedColor = colorInside.clone();
+      mixedColor.lerp(colorOutside, radius / parameters.radius);
+
+      colors[i3] = mixedColor.r;
+      colors[i3 + 1] = mixedColor.g;
+      colors[i3 + 2] = mixedColor.b;
+    }
+
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+    const material = new THREE.PointsMaterial({
+      size: parameters.size,
+      sizeAttenuation: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+      vertexColors: true
+    });
+
+    const points = new THREE.Points(geometry, material);
+    scene.add(points);
+
+    camera.position.x = 0;
+    camera.position.y = 3.5;
+    camera.position.z = 4.5;
+    camera.lookAt(0, 0, 0);
+
+    const clock = new THREE.Clock();
+
+    function animate() {
+      const elapsedTime = clock.getElapsedTime();
+      points.rotation.y = elapsedTime * 0.12;
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>
